@@ -6,7 +6,7 @@ class AndGate:                                  #Klassendefinition
         self.Input0 = False
         self.Input1 = False
         self.Output = False
-        self.Name = "EselGate"
+        self.Name = "YaAndGate"
 
     def show(self):
         print("Input0(" + str(self.Input0) + ") und Input1(" + str(self.Input1) + ") ergibt: " + str(self.Output))
