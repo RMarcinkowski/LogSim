@@ -1,8 +1,8 @@
-__version__ = "1.0"                             #Verwaltungsinfos
+__version__ = "1.0"                             # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
-class AndGate:                                  #Klassendefinition
-    def __init__(self):                         #Attribute definieren
+class AndGate:                                  # Klassendefinition
+    def __init__(self):                         # Attribute definieren
         self.Input0 = False
         self.Input1 = False
         self.Output = False
