@@ -9,13 +9,17 @@ class AndGate:                                  #Klassendefinition
         self.Name = "YaAndGate"
 
     def show(self):
-        print("Input0(" + str(self.Input0) + ") und Input1(" + str(self.Input1) + ") ergibt: " + str(self.Output))
+        print(self.__str__())
 
     def execute(self):
         if self.Input0 == self.Input1 == True:
             self.Output = True
         else:
             self.Output = False
+
+    def __str__(self):
+        return "Input0(" + str(self.Input0) + ") und Input1(" + str(self.Input1) + ") ergibt: " + str(self.Output)
+
 
 
 AND = AndGate()
