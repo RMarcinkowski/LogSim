@@ -1,5 +1,5 @@
 import unittest
-from LogFunc import *
+from Logfunc import *
 
 class AndGateTest(unittest.TestCase):
     def testcase_01(self):
