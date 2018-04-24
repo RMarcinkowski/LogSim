@@ -1,4 +1,4 @@
-__version__ = "1.1"                             # Verwaltungsinfos
+__version__ = "2"                             # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 class LogFunc:
