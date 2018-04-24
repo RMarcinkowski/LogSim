@@ -67,3 +67,10 @@ class XorGate(LogFunc):
             self._setOutput(False)
         else:
             self._setOutput(True)
+
+class NandGate(LogFunc):
+    def execute(self):
+        if self.Input0 == self.Input1 == True:
+            self._setOutput(False)
+        else:
+            self._setOutput(True)
