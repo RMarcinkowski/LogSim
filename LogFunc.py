@@ -1,4 +1,4 @@
-__version__ = "2.1"                             # Verwaltungsinfos
+__version__ = "2.2"                             # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 class LogFunc:
@@ -74,3 +74,5 @@ class NandGate(LogFunc):
             self._setOutput(False)
         else:
             self._setOutput(True)
+
+            
