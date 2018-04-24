@@ -5,7 +5,7 @@ class LogFunc:
     def __init__(self):
         self.__Input0 = False
         self.__Input1 = False
-        self.__Output = False
+        self._Output = False            # Output is protected
         self.__Name = ""
 
     # getter and setter
@@ -22,7 +22,7 @@ class LogFunc:
         self.__Input1 = input
 
     def __getOutput(self):
-        return self.__Output
+        return self._Output
 
     def __getName(self):
         return self.__Name
@@ -47,26 +47,20 @@ class LogFunc:
 class AndGate(LogFunc):
     def execute(self):
         if self.Input0 == self.Input1 == True:
-            self.__Output = True
+            self._Output = True
         else:
-            self.__Output = False
+            self._Output = False
 
 class OrGate(LogFunc):    
     def execute(self):
         if self.Input0 == self.Input1 == False:
-            self.__Output = False
+            self._Output = False
         else:
-            self.__Output = True
+            self._Output = True
 
-class XOrGate(LogFunc):
+class XorGate(LogFunc):
     def execute(self):
         if self.Input0 == self.Input1:
-            self.__Output = False
+            self._Output = False
         else:
-            self.__Output = True
-
-# print display test
-x = []
-for i in range(0,10):
-    a = XorGate()
-    x.append(a)
+            self._Output = True
