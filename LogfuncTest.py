@@ -1,5 +1,5 @@
 import unittest
-from Logfunc import *
+from LogFunc import *
 
 class AndGateTest(unittest.TestCase):
     def testcase_01(self):
@@ -30,7 +30,6 @@ class AndGateTest(unittest.TestCase):
         a.execute()
         self.assertTrue(a.Output, "Class AndGate: Testcase 4 failed.")
 
-
 class OrGateTest(unittest.TestCase):
     def testcase_01(self):
         a = OrGate()
@@ -59,7 +58,6 @@ class OrGateTest(unittest.TestCase):
         a.Input1 = True
         a.execute()
         self.assertTrue(a.Output, "Class OrGate: Testcase 4 failed.")
-
 
 class XorGateTest(unittest.TestCase):
     def testcase_01(self):
