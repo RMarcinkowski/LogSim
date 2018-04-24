@@ -26,7 +26,6 @@ class LogFunc:
 
     def _setOutput(self, output):               # setOutput is protected
         self.__Output = output
-
     def __getName(self):
         return self.__Name
 
@@ -74,5 +73,3 @@ class NandGate(LogFunc):
             self._setOutput(False)
         else:
             self._setOutput(True)
-
-            
