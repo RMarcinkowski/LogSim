@@ -1,11 +1,11 @@
-__version__ = "2"                             # Verwaltungsinfos
+__version__ = "2.1"                             # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 class LogFunc:
     def __init__(self):
         self.__Input0 = False
         self.__Input1 = False
-        self._Output = False            # Output is protected
+        self.__Output = False
         self.__Name = ""
 
     # getter and setter
@@ -22,7 +22,10 @@ class LogFunc:
         self.__Input1 = input
 
     def __getOutput(self):
-        return self._Output
+        return self.__Output
+
+    def _setOutput(self, output):               # setOutput is protected
+        self.__Output = output
 
     def __getName(self):
         return self.__Name
@@ -47,20 +50,20 @@ class LogFunc:
 class AndGate(LogFunc):
     def execute(self):
         if self.Input0 == self.Input1 == True:
-            self._Output = True
+            self._setOutput(True)
         else:
-            self._Output = False
+            self._setOutput(False)
 
 class OrGate(LogFunc):    
     def execute(self):
         if self.Input0 == self.Input1 == False:
-            self._Output = False
+            self._setOutput(False)
         else:
-            self._Output = True
+            self._setOutput(True)
 
 class XorGate(LogFunc):
     def execute(self):
         if self.Input0 == self.Input1:
-            self._Output = False
+            self._setOutput(False)
         else:
-            self._Output = True
+            self._setOutput(True)
