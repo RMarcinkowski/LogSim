@@ -43,6 +43,9 @@ class LogFunc:
     def __str__(self):
         return "Input0(" + str(self.Input0) + ") und Input1(" + str(self.Input1) + ") ergibt: " + str(self.Output)
     
+    def execute(self)
+        pass
+    
     # properties
     Name = property(__getName, __setName)
     Input0 = property(__getInput0, __setInput0)
