@@ -1,17 +1,19 @@
+from abc import ABC, abstractmethod
+
 __version__ = "2.3"                             # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
-class LogFunc:
-
+class LogFunc(ABC):
+    
     def __init__(self):
         self.__Input0 = False
         self.__Input1 = False
         self.__Output = False
         self.__Name = ""
         self.execute()
-        
-    # getter and setter    
+       
+    # getter and setter        
     def __getInput0(self):
         return self.__Input0
 
@@ -43,9 +45,10 @@ class LogFunc:
     def __str__(self):
         return "Input0(" + str(self.Input0) + ") und Input1(" + str(self.Input1) + ") ergibt: " + str(self.Output)
     
-    def execute(self)
-        pass
-    
+    @abstractmethod
+    def execute(self):
+        pass    
+
     # properties
     Name = property(__getName, __setName)
     Input0 = property(__getInput0, __setInput0)
@@ -54,25 +57,25 @@ class LogFunc:
 
 
 class AndGate(LogFunc):
-    
+
     def execute(self):
         if self.Input0 == self.Input1 == True:
             self._setOutput(True)
         else:
-            self._setOutput(False)
-            
+            self._setOutput(False)             
 
-class OrGate(LogFunc):
-    
+
+class OrGate(LogFunc):    
+
     def execute(self):
         if self.Input0 == self.Input1 == False:
             self._setOutput(False)
         else:
-            self._setOutput(True)
+            self._setOutput(True)          
             
-            
-class XorGate(LogFunc):
-    
+
+class XorGate(LogFunc):    
+
     def execute(self):
         if self.Input0 == self.Input1:
             self._setOutput(False)
@@ -80,11 +83,10 @@ class XorGate(LogFunc):
             self._setOutput(True)
             
 
-class NandGate(LogFunc):
-    
+class NandGate(LogFunc):    
+
     def execute(self):
         if self.Input0 == self.Input1 == True:
             self._setOutput(False)
         else:
             self._setOutput(True)
-            
