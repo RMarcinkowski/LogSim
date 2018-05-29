@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "2.3"                             # Verwaltungsinfos
+__version__ = "2.4"                             # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
