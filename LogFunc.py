@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 # Verwaltungsinfos
-__version__ = "3.0" 
+__version__ = "3.1" 
 __author__ = "Ruben Marcinkowski"
 
 
@@ -65,31 +65,25 @@ class LogFunc(ABC):
 class AndGate(LogFunc):
     def execute(self):
         """set the output to true when all inputs are true."""
-        for inp in self.Inputs:
-            if inp == False:
-                self._setOutput(False)
-                return
-        self._setOutput(True)
+        if self.Inputs.count(False) == 0:
+            self._setOutput(True)
+        else:
+            self._setOutput(False)
 
 
 class OrGate(LogFunc):
     def execute(self):
         """set the output to false when all inputs are false."""
-        for inp in self.Inputs:
-            if inp == True:
-                self._setOutput(True)
-                return
-        self._setOutput(False)
+        if self.Inputs.count(True) == 0:
+            self._setOutput(False)
+        else:
+            self._setOutput(True)
 
 
 class XorGate(LogFunc):
     def execute(self):
         """set the output to true when exactly one input is true."""
-        trueCount = 0
-        for inp in self.Inputs:
-            if inp == True:
-                trueCount = trueCount + 1
-        if trueCount == 1:
+        if self.Inputs.count(True) == 1:
             self._setOutput(True)
         else:
             self._setOutput(False)
@@ -98,8 +92,7 @@ class XorGate(LogFunc):
 class NandGate(LogFunc):
     def execute(self):
         """set the output to false when all inputs are true."""
-        for inp in self.Inputs:
-            if inp == False:
-                self._setOutput(True)
-                return
-        self._setOutput(False)
+        if self.Inputs.count(False) == 0:
+            self._setOutput(False)
+        else:
+            self._setOutput(True)
