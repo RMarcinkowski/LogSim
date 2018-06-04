@@ -1,22 +1,22 @@
 from abc import ABC, abstractmethod
 
-# Verwaltungsinfos
-__version__ = "3.1" 
+__version__ = "3.2"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
 class LogFunc(ABC):
-    """The parent class for logic gate classes."""    
-    def __init__(self, numInputs = 2):
+    """The parent class for logic gate classes."""
+    def __init__(self, numInputs = 2, numOutputs = 1):
         """Create a logic gate.
-        
+
         Keyword argument:
-        numInputs -- variable number of inputs (two inputs by default). 
-        
-        Inputs and output get boolean value false by default. 
+        numInputs -- variable number of inputs (two inputs by default).
+        numOutputs -- variable number of outputs (one output by default).
+
+        Inputs and output get boolean value false by default.
         """
-        self.__Inputs = [False for i in range(numInputs)]
-        self.__Output = False
+        self.__Inputs = [False] * numInputs
+        self.__Outputs = [False] * numOutputs
         self.__Name = type(self).__name__
         self.execute()
 
@@ -24,14 +24,14 @@ class LogFunc(ABC):
     def __getInputs(self):
         return self.__Inputs
 
-    def __setInputs(self, value):
-        self.__Inputs = value
+    def __setInputs(self, inputs):
+        self.__Inputs = inputs
 
-    def __getOutput(self):
-        return self.__Output
+    def __getOutputs(self):
+        return self.__Outputs
 
-    def _setOutput(self, output):       # setOutput is protected
-        self.__Output = output
+    def _setOutputs(self, outputs):       # setOutputs is protected
+        self.__Outputs = outputs
 
     def __getName(self):
         return self.__Name
@@ -41,16 +41,16 @@ class LogFunc(ABC):
 
     # methods
     def show(self):
-        """print an overview of all inputs and their effect on the output."""
+        """print an overview of all inputs and their effect on the outputs."""
         print(self.__str__())
 
     def __str__(self):
         self.execute()
-        returnString = "Input0(" + str(self.Inputs[0]) + ") "
-        for i in range(1, len(self.Inputs)):
-            returnString += "und Input" + str(i) + "(" + str(self.Inputs[i]) + ") "
-        returnString += "im " + self.Name + " ergibt: " + str(self.Output)
-        return returnString
+        ausgangsstring = "einem Ausgang"
+        if len(self.Outputs) > 1:
+            ausgangsstring = str(len(self.Outputs)) + " Ausgängen"
+        return "Die Eingänge " + str(self.Inputs) + " ergeben im " \
+               + self.Name + " mit " + ausgangsstring + " folgende Werte: " + str(self.Outputs)
 
     @abstractmethod
     def execute(self):
@@ -59,40 +59,50 @@ class LogFunc(ABC):
     # properties
     Name = property(__getName, __setName)
     Inputs = property(__getInputs, __setInputs)
-    Output = property(__getOutput, None)
+    Outputs = property(__getOutputs, None)
 
 
 class AndGate(LogFunc):
     def execute(self):
-        """set the output to true when all inputs are true."""
+        """set the outputs to true when all inputs are true."""
         if self.Inputs.count(False) == 0:
-            self._setOutput(True)
+            self._setOutputs([True] * len(self.Outputs))
         else:
-            self._setOutput(False)
+            self._setOutputs([False] * len(self.Outputs))
 
 
 class OrGate(LogFunc):
     def execute(self):
-        """set the output to false when all inputs are false."""
+        """set the outputs to false when all inputs are false."""
         if self.Inputs.count(True) == 0:
-            self._setOutput(False)
+            self._setOutputs([False] * len(self.Outputs))
         else:
-            self._setOutput(True)
+            self._setOutputs([True] * len(self.Outputs))
 
 
 class XorGate(LogFunc):
     def execute(self):
-        """set the output to true when exactly one input is true."""
+        """set the outputs to true when exactly one input is true."""
         if self.Inputs.count(True) == 1:
-            self._setOutput(True)
+            self._setOutputs([True] * len(self.Outputs))
         else:
-            self._setOutput(False)
+            self._setOutputs([False] * len(self.Outputs))
 
 
 class NandGate(LogFunc):
     def execute(self):
-        """set the output to false when all inputs are true."""
+        """set the outputs to false when all inputs are true."""
         if self.Inputs.count(False) == 0:
-            self._setOutput(False)
+            self._setOutputs([False] * len(self.Outputs))
         else:
-            self._setOutput(True)
+            self._setOutputs([True] * len(self.Outputs))
+
+class NotGate(LogFunc):
+    def execute(self):
+
+        if len(self.Inputs) != len(self.Outputs):
+            raise ArithmeticError("The number of inputs has to be equal to the number of outputs!")
+        outputs = [None] * len(self.Outputs)
+        for i in range(len(self.Inputs)):
+            outputs[i] = not self.Inputs[i]
+        self._setOutputs(outputs)
