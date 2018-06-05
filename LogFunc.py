@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "3.2"  # Verwaltungsinfos
+__version__ = "3.3"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
@@ -83,7 +83,7 @@ class OrGate(LogFunc):
 class XorGate(LogFunc):
     def execute(self):
         """set the outputs to true when exactly one input is true."""
-        if self.Inputs.count(True) == 1:
+        if self.Inputs.count(True) % 2 == 1:
             self._setOutputs([True] * len(self.Outputs))
         else:
             self._setOutputs([False] * len(self.Outputs))
@@ -99,7 +99,7 @@ class NandGate(LogFunc):
 
 class NotGate(LogFunc):
     def execute(self):
-
+        """set the output at the specific index to the opposite of the input at that position."""
         if len(self.Inputs) != len(self.Outputs):
             raise ArithmeticError("The number of inputs has to be equal to the number of outputs!")
         outputs = [None] * len(self.Outputs)
