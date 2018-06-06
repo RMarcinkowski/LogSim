@@ -132,6 +132,7 @@ class NotGate(LogFunc):
             outputs[i] = not self.Inputs[i]
         self._setOutputs(outputs)
 
+        
 class HalfAdder(LogFunc):
 
     def __init__(self):
@@ -148,6 +149,7 @@ class HalfAdder(LogFunc):
         a.execute()
         self._setOutputs([a.Outputs, xor.Outputs])
 
+        
 class FullAdder(LogFunc):
 
     def __init__(self):
