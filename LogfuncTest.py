@@ -252,25 +252,99 @@ class HalfAdderTest(unittest.TestCase):
         a.Inputs[0] = False
         a.Inputs[1] = True
         a.execute()
-        self.assertTrue(a.Outputs[0], "Class HalfAdder: Testcase 1 failed.")
-        self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 1 failed.")
+        self.assertFalse(a.Outputs[0], "Class HalfAdder: Testcase 1 failed.")
+        self.assertTrue(a.Outputs[1], "Class HalfAdder: Testcase 1 failed.")
+
 
     def testcase_02(self):
         a = HalfAdder()
         a.Inputs[0] = True
         a.Inputs[1] = False
         a.execute()
-        self.assertTrue(a.Outputs[0], "Class HalfAdder: Testcase 2 failed.")
-        self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 2 failed.")
+        self.assertFalse(a.Outputs[0], "Class HalfAdder: Testcase 2 failed.")
+        self.assertTrue(a.Outputs[1], "Class HalfAdder: Testcase 2 failed.")
 
     def testcase_03(self):
         a = HalfAdder()
         a.Inputs[0] = True
         a.Inputs[1] = True
         a.execute()
-        self.assertFalse(a.Outputs[0], "Class HalfAdder: Testcase 3 failed.")
-        self.assertTrue(a.Outputs[1], "Class HalfAdder: Testcase 3 failed.")
+        self.assertTrue(a.Outputs[0], "Class HalfAdder: Testcase 3 failed.")
+        self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 3 failed.")
 
+
+
+class FullAdderTest(unittest.TestCase):
+    def testcase_00(self):
+        a = FullAdder()
+        self.assertFalse(a.Inputs[0], "Class FullAdder: Testcase 0 failed.")
+        self.assertFalse(a.Inputs[1], "Class FullAdder: Testcase 0 failed.")
+        self.assertFalse(a.Inputs[2], "Class FullAdder: Testcase 0 failed.")
+        self.assertFalse(a.Outputs[0], "Class FullAdder: Testcase 0 failed.")
+        self.assertFalse(a.Outputs[1], "Class FullAdder: Testcase 0 failed.")
+
+    def testcase_01(self):
+        a = FullAdder()
+        a.Inputs[0] = False
+        a.Inputs[1] = False
+        a.Inputs[2] = True
+        a.execute()
+        self.assertFalse(a.Outputs[0], "Class FullAdder: Testcase 1 failed.")
+        self.assertTrue(a.Outputs[1], "Class FullAdder: Testcase 1 failed.")
+
+    def testcase_02(self):
+        a = FullAdder()
+        a.Inputs[0] = False
+        a.Inputs[1] = True
+        a.Inputs[2] = False
+        a.execute()
+        self.assertFalse(a.Outputs[0], "Class FullAdder: Testcase 2 failed.")
+        self.assertTrue(a.Outputs[1], "Class FullAdder: Testcase 2 failed.")
+
+    def testcase_03(self):
+        a = FullAdder()
+        a.Inputs[0] = False
+        a.Inputs[1] = True
+        a.Inputs[2] = True
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class FullAdder: Testcase 3 failed.")
+        self.assertFalse(a.Outputs[1], "Class FullAdder: Testcase 3 failed.")
+
+    def testcase_04(self):
+        a = FullAdder()
+        a.Inputs[0] = True
+        a.Inputs[1] = False
+        a.Inputs[2] = False
+        a.execute()
+        self.assertFalse(a.Outputs[0], "Class FullAdder: Testcase 4 failed.")
+        self.assertTrue(a.Outputs[1], "Class FullAdder: Testcase 4 failed.")
+
+    def testcase_05(self):
+        a = FullAdder()
+        a.Inputs[0] = True
+        a.Inputs[1] = False
+        a.Inputs[2] = True
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class FullAdder: Testcase 5 failed.")
+        self.assertFalse(a.Outputs[1], "Class FullAdder: Testcase 5 failed.")
+
+    def testcase_06(self):
+        a = FullAdder()
+        a.Inputs[0] = True
+        a.Inputs[1] = True
+        a.Inputs[2] = False
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class FullAdder: Testcase 6 failed.")
+        self.assertFalse(a.Outputs[1], "Class FullAdder: Testcase 6 failed.")
+
+    def testcase_07(self):
+        a = FullAdder()
+        a.Inputs[0] = True
+        a.Inputs[1] = True
+        a.Inputs[2] = True
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class FullAdder: Testcase 7 failed.")
+        self.assertTrue(a.Outputs[1], "Class FullAdder: Testcase 7 failed.")
 
 if __name__ == "__main__":
     unittest.main()
