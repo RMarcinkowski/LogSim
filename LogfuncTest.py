@@ -238,7 +238,38 @@ class NotGateTest(unittest.TestCase):
         self.assertFalse(a.Outputs[1], "Class NotGate: Testcase 1 failed.")
         self.assertFalse(a.Outputs[2], "Class NotGate: Testcase 1 failed.")
 
+        
+class HalfAdderTest(unittest.TestCase):
+    def testcase_00(self):
+        a = HalfAdder()
+        self.assertFalse(a.Inputs[0], "Class HalfAdder: Testcase 0 failed.")
+        self.assertFalse(a.Inputs[1], "Class HalfAdder: Testcase 0 failed.")
+        self.assertFalse(a.Outputs[0], "Class HalfAdder: Testcase 0 failed.")
+        self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 0 failed.")
 
+    def testcase_01(self):
+        a = HalfAdder()
+        a.Inputs[0] = False
+        a.Inputs[1] = True
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class HalfAdder: Testcase 1 failed.")
+        self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 1 failed.")
+
+    def testcase_02(self):
+        a = HalfAdder()
+        a.Inputs[0] = True
+        a.Inputs[1] = False
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class HalfAdder: Testcase 2 failed.")
+        self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 2 failed.")
+
+    def testcase_03(self):
+        a = HalfAdder()
+        a.Inputs[0] = True
+        a.Inputs[1] = True
+        a.execute()
+        self.assertFalse(a.Outputs[0], "Class HalfAdder: Testcase 3 failed.")
+        self.assertTrue(a.Outputs[1], "Class HalfAdder: Testcase 3 failed.")
 
 
 if __name__ == "__main__":
