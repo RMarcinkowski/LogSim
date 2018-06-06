@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "4.1"  # Verwaltungsinfos
+__version__ = "4.2"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
@@ -135,13 +135,34 @@ class NotGate(LogFunc):
 class HalfAdder(LogFunc):
 
     def __init__(self):
+        """set 2 inputs and 2 outputs."""
         super().__init__(2, 2)
 
     def execute(self):
+        """set the outputs to carry and sum of the half adder."""
         xor = XorGate(2)
         a = AndGate(2)
         xor.Inputs = self.Inputs
         a.Inputs = self.Inputs
         xor.execute()
         a.execute()
-        self._setOutputs([xor.Outputs, a.Outputs])
+        self._setOutputs([a.Outputs, xor.Outputs])
+
+class FullAdder(LogFunc):
+
+    def __init__(self):
+        """set 3 inputs and 2 outputs."""
+        super().__init__(3, 2)
+
+    def execute(self):
+        """set the outputs to carry and sum of the full adder."""
+        h1 = HalfAdder()
+        h2 = HalfAdder()
+        o = OrGate()
+        h1.Inputs = [self.Inputs[0], self.Inputs[1]]
+        h1.execute()
+        h2.Inputs = [h1.Outputs[1], self.Inputs[2]]
+        h2.execute()
+        o.Inputs = [h1.Outputs[0], h2.Outputs[0]]
+        o.execute()
+        self._setOutputs([o.Outputs, h2.Outputs[1]])
