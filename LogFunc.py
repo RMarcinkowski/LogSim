@@ -133,21 +133,21 @@ class NotGate(LogFunc):
         self._setOutputs(outputs)
 
         
-class HalfAdder(LogFunc):
+class HalfAdder(LogFunc):    
 
     def __init__(self):
         """set 2 inputs and 2 outputs."""
+        self.__sum = XorGate(2)
+        self.__carry = AndGate(2)
         super().__init__(2, 2)
 
     def execute(self):
         """set the outputs to carry and sum of the half adder."""
-        xor = XorGate(2)
-        a = AndGate(2)
-        xor.Inputs = self.Inputs
-        a.Inputs = self.Inputs
-        xor.execute()
-        a.execute()
-        self._setOutputs([a.Outputs, xor.Outputs])
+        self.__sum.Inputs = self.Inputs
+        self.__carry.Inputs = self.Inputs
+        self.__sum.execute()
+        self.__carry.execute()
+        self._setOutputs([self.__carry.Outputs, self.__sum.Outputs])
 
         
 class FullAdder(LogFunc):
