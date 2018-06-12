@@ -151,20 +151,20 @@ class HalfAdder(LogFunc):
 
         
 class FullAdder(LogFunc):
-
+    
     def __init__(self):
         """set 3 inputs and 2 outputs."""
+        self.__h1 = HalfAdder()
+        self.__h2 = HalfAdder()
+        self.__carry = OrGate()
         super().__init__(3, 2)
 
     def execute(self):
-        """set the outputs to carry and sum of the full adder."""
-        h1 = HalfAdder()
-        h2 = HalfAdder()
-        o = OrGate()
-        h1.Inputs = [self.Inputs[0], self.Inputs[1]]
-        h1.execute()
-        h2.Inputs = [h1.Outputs[1], self.Inputs[2]]
-        h2.execute()
-        o.Inputs = [h1.Outputs[0], h2.Outputs[0]]
-        o.execute()
-        self._setOutputs([o.Outputs, h2.Outputs[1]])
+        """set the outputs to carry and sum of the full adder."""        
+        self.__h1.Inputs = [self.Inputs[0], self.Inputs[1]]
+        self.__h1.execute()
+        self.__h2.Inputs = [self.__h1.Outputs[1], self.Inputs[2]]
+        self.__h2.execute()
+        self.__carry.Inputs = [self.__h1.Outputs[0], self.__h2.Outputs[0]]
+        self.__carry.execute()
+        self._setOutputs([self.__carry.Outputs, self.__h2.Outputs[1]])
