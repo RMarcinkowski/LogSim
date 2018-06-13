@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "4.2"  # Verwaltungsinfos
+__version__ = "4.3"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
@@ -151,20 +151,18 @@ class HalfAdder(LogFunc):
 
         
 class FullAdder(LogFunc):
-    
     def __init__(self):
         """set 3 inputs and 2 outputs."""
-        self.__h1 = HalfAdder()
-        self.__h2 = HalfAdder()
+        self.__sum = [HalfAdder(), HalfAdder()]
         self.__carry = OrGate()
         super().__init__(3, 2)
 
     def execute(self):
-        """set the outputs to carry and sum of the full adder."""        
-        self.__h1.Inputs = [self.Inputs[0], self.Inputs[1]]
-        self.__h1.execute()
-        self.__h2.Inputs = [self.__h1.Outputs[1], self.Inputs[2]]
-        self.__h2.execute()
-        self.__carry.Inputs = [self.__h1.Outputs[0], self.__h2.Outputs[0]]
+        """set the outputs to carry and sum of the full adder."""
+        self.__sum[0].Inputs = [self.Inputs[0], self.Inputs[1]]
+        self.__sum[0].execute()
+        self.__sum[1].Inputs = [self.__sum[0].Outputs[1], self.Inputs[2]]
+        self.__sum[1].execute()
+        self.__carry.Inputs = [self.__sum[0].Outputs[0], self.__sum[1].Outputs[0]]
         self.__carry.execute()
-        self._setOutputs([self.__carry.Outputs, self.__h2.Outputs[1]])
+        self._setOutputs([self.__carry.Outputs, self.__sum[1].Outputs[1]])
