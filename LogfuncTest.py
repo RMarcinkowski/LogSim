@@ -46,7 +46,6 @@ class AndGateTest(unittest.TestCase):
         a.execute()
         self.assertFalse(a.Outputs, "Class AndGate: Testcase 5 failed.")
 
-
     def testcase_06(self):
         a = AndGate(4)
         a.Inputs[0] = True
@@ -56,8 +55,8 @@ class AndGateTest(unittest.TestCase):
         a.execute()
         self.assertTrue(a.Outputs, "Class AndGate: Testcase 6 failed.")
 
-class OrGateTest(unittest.TestCase):
 
+class OrGateTest(unittest.TestCase):
     def testcase_00(self):
         a = OrGate()
         self.assertFalse(a.Inputs[0], "Class OrGate: Testcase 0 failed.")
@@ -112,7 +111,6 @@ class OrGateTest(unittest.TestCase):
 
 
 class XorGateTest(unittest.TestCase):
-
     def testcase_00(self):
         a = XorGate()
         self.assertFalse(a.Inputs[0], "Class XorGate: Testcase 0 failed.")
@@ -167,7 +165,6 @@ class XorGateTest(unittest.TestCase):
 
 
 class NandGateTest(unittest.TestCase):
-
     def testcase_00(self):
         a = NandGate()
         self.assertFalse(a.Inputs[0], "Class NandGate: Testcase 0 failed.")
@@ -222,7 +219,6 @@ class NandGateTest(unittest.TestCase):
 
 
 class NotGateTest(unittest.TestCase):
-
     def testcase_00(self):
         a = NotGate(1)
         self.assertFalse(a.Inputs[0], "Class NotGate: Testcase 0 failed.")
@@ -238,7 +234,7 @@ class NotGateTest(unittest.TestCase):
         self.assertFalse(a.Outputs[1], "Class NotGate: Testcase 1 failed.")
         self.assertFalse(a.Outputs[2], "Class NotGate: Testcase 1 failed.")
 
-        
+
 class HalfAdderTest(unittest.TestCase):
     def testcase_00(self):
         a = HalfAdder()
@@ -255,7 +251,6 @@ class HalfAdderTest(unittest.TestCase):
         self.assertFalse(a.Outputs[0], "Class HalfAdder: Testcase 1 failed.")
         self.assertTrue(a.Outputs[1], "Class HalfAdder: Testcase 1 failed.")
 
-
     def testcase_02(self):
         a = HalfAdder()
         a.Inputs[0] = True
@@ -271,7 +266,6 @@ class HalfAdderTest(unittest.TestCase):
         a.execute()
         self.assertTrue(a.Outputs[0], "Class HalfAdder: Testcase 3 failed.")
         self.assertFalse(a.Outputs[1], "Class HalfAdder: Testcase 3 failed.")
-
 
 
 class FullAdderTest(unittest.TestCase):
@@ -345,6 +339,65 @@ class FullAdderTest(unittest.TestCase):
         a.execute()
         self.assertTrue(a.Outputs[0], "Class FullAdder: Testcase 7 failed.")
         self.assertTrue(a.Outputs[1], "Class FullAdder: Testcase 7 failed.")
+
+
+class EightBitAdderTest(unittest.TestCase):
+    def testcase_00(self):
+        a = EightBitAdder()
+        for i in range(16):
+            self.assertFalse(a.Inputs[i], "Class EightBitAdder: Testcase 0 failed.")
+        for i in range(9):
+            self.assertFalse(a.Outputs[i], "Class EightBitAdder: Testcase 0 failed.")
+
+    def testcase_01(self):
+        a = EightBitAdder()
+        a.Inputs[0] = True
+        a.execute()
+        self.assertTrue(a.Outputs[0], "Class EightBitAdder: Testcase 1 failed.")
+        for i in range(1, 9):
+            self.assertFalse(a.Outputs[i], "Class EightBitAdder: Testcase 1 failed.")
+
+    def testcase_02(self):
+        a = EightBitAdder()
+        a.Inputs[5] = True
+        a.Inputs[5+8] = True        # inputs a5 and b5 = True
+        a.execute()
+        self.assertTrue(a.Outputs[6], "Class EightBitAdder: Testcase 2 failed.")
+        for i in range(1, 6):
+            self.assertFalse(a.Outputs[i], "Class EightBitAdder: Testcase 2 failed.")
+        for i in range(7, 9):
+            self.assertFalse(a.Outputs[i], "Class EightBitAdder: Testcase 2 failed.")
+
+    def testcase_03(self):
+        a = EightBitAdder()
+        a.Inputs[4] = True
+        a.Inputs[4 + 8] = True
+        a.Inputs[5] = True     # inputs a4, b4 and a5 = True
+        a.execute()
+        self.assertTrue(a.Outputs[6], "Class EightBitAdder: Testcase 3 failed.")
+        for i in range(1, 6):
+            self.assertFalse(a.Outputs[i], "Class EightBitAdder: Testcase 3 failed.")
+        for i in range(7, 9):
+            self.assertFalse(a.Outputs[i], "Class EightBitAdder: Testcase 3 failed.")
+
+    def testcase_04(self):
+        a = EightBitAdder()
+        for i in range(7):
+            a.Inputs[i] = True
+        a.Inputs[15] = True
+        a.execute()
+        self.assertFalse(a.Outputs[8], "Class EightBitAdder: Testcase 4 failed.")
+        for i in range(8):
+            self.assertTrue(a.Outputs[i], "Class EightBitAdder: Testcase 4 failed.")
+
+    def testcase_05(self):
+        a = EightBitAdder()
+        a.Inputs = [True] * 16
+        a.execute()
+        self.assertFalse(a.Outputs[0], "Class EightBitAdder: Testcase 5 failed.")
+        for i in range(1,8):
+            self.assertTrue(a.Outputs[i], "Class EightBitAdder: Testcase 5 failed.")
+
 
 if __name__ == "__main__":
     unittest.main()
