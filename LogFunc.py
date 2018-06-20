@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "5.0"  # Verwaltungsinfos
+__version__ = "6.0"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
@@ -19,6 +19,7 @@ class LogFunc(ABC):
         self.__Inputs = [False] * numInputs
         self.__Outputs = [False] * numOutputs
         self.__Name = type(self).__name__
+        self.__ShowBehavior = DefaultShow()
         self.execute()
 
     # getter and setter
@@ -40,18 +41,17 @@ class LogFunc(ABC):
     def __setName(self, name):
         self.__Name = name
 
+    def setShow(self, showBehavior):
+        self.__ShowBehavior = showBehavior
+
     # methods
     def show(self):
         """Print an overview of all inputs and their effect on the outputs."""
-        print(self.__str__())
+        self.__str__()
 
     def __str__(self):
         self.execute()
-        ausgangsstring = "einem Ausgang"
-        if len(self.Outputs) > 1:
-            ausgangsstring = str(len(self.Outputs)) + " Ausgängen"
-        return "Die Eingänge " + str(self.Inputs) + " ergeben im " \
-               + self.Name + " mit " + ausgangsstring + " folgende Werte: " + str(self.Outputs)
+        self.__ShowBehavior.show(self.Name, self.Inputs, self.Outputs)
 
     @abstractmethod
     def execute(self):
@@ -184,4 +184,116 @@ class EightBitAdder(LogFunc):
             outputs[i] = self.__adder[i].Outputs[1]
         outputs[sumOutputs] = carry
         self._setOutputs(outputs)
-        
+
+
+class ShowBehavior(ABC):
+
+    @abstractmethod
+    def show(self, name, inputs, outputs):
+        raise NotImplementedError()
+
+    def _boolToBinary(self, bool_values):
+        if isinstance(bool_values, bool):
+            if bool_values:
+                return "1"
+            else:
+                return "0"
+        for i in range(len(bool_values)):
+            if bool_values[i]:
+                bool_values[i] = "1"
+            else:
+                bool_values[i] = "0"
+        return bool_values
+
+
+class DefaultShow(ShowBehavior):
+
+    def show(self, name, inputs, outputs):
+        ausgangsstring = "einem Ausgang"
+        if not isinstance(outputs, bool):
+            ausgangsstring = str(len(outputs)) + " Ausgängen"
+        print("Die Eingänge " + str(inputs) + " ergeben im " \
+               + name + " mit " + ausgangsstring + " folgende Werte: " + str(outputs))
+
+class StarGateShow():
+
+    def __init__(self):
+        self._cwidth = 60
+
+    def _get_line(self, left_text, right_text):
+        return "**" + left_text.ljust(int(self._cwidth / 3 - 2), " ") + "|" + right_text.ljust(
+            int((2 * self._cwidth) / 3) - 3, " ") + "**"
+
+class HalfAdderShow(ShowBehavior, StarGateShow):
+
+    def show(self, name, inputs, outputs):
+        inputs = self._boolToBinary(inputs)
+        outputs = self._boolToBinary(outputs)
+
+        empty_line = self._get_line("", "")
+        first_last = "".ljust(self._cwidth, "*")
+        mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+        print("\n" + first_last)
+        print(self._get_line(" " + name, ""))
+        print(self._get_line("", "  A = " + inputs[0]))
+        print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B = " + inputs[1]))
+        print(mid)
+        print(empty_line)
+        print(self._get_line("  Carry = " + outputs[0], "  Sum = " + outputs[1]))
+        print(empty_line)
+        print(first_last + "\n")
+
+
+class FullAdderShow(ShowBehavior, StarGateShow):
+
+    def show(self, name, inputs, outputs):
+        inputs = self._boolToBinary(inputs)
+        outputs = self._boolToBinary(outputs)
+
+        empty_line = self._get_line("", "")
+        first_last = "".ljust(self._cwidth, "*")
+        mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+        print("\n" + first_last)
+        print(self._get_line(" " + name, ""))
+        print(self._get_line("", "  Carry in = " + inputs[0]))
+        print(self._get_line("", "  A        = " + inputs[1]))
+        print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B        = " + inputs[2]))
+        print(mid)
+        print(empty_line)
+        print(self._get_line("  Carry out = " + outputs[0], "  Sum = " + outputs[1]))
+        print(empty_line)
+        print(first_last + "\n")
+
+
+class EightBitShow(ShowBehavior, StarGateShow):
+
+    def show(self, name, inputs, outputs):
+        inputs = self._boolToBinary(inputs)
+        outputs = self._boolToBinary(outputs)
+
+        inputsA = ""
+        for i in range(8):
+            inputsA += str(inputs[i])
+        inputsA = inputsA[::-1]
+        inputsB = ""
+        for i in range(8, 16):
+            inputsB += str(inputs[i])
+        inputsB = inputsB[::-1]
+
+        sum_line = ""
+        for i in range(8):
+            sum_line += str(outputs[i])
+        sum_line = sum_line[::-1]
+
+        empty_line = self._get_line("", "")
+        first_last = "".ljust(self._cwidth, "*")
+        mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+        print("\n" + first_last)
+        print(self._get_line(" " + name, ""))
+        print(self._get_line("", "  A = " + inputsA))
+        print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B = " + inputsB))
+        print(mid)
+        print(empty_line)
+        print(self._get_line("  Carry = " + outputs[8], "  Sum = " + sum_line))
+        print(empty_line)
+        print(first_last + "\n")
