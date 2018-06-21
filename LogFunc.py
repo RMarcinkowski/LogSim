@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "6.0"  # Verwaltungsinfos
+__version__ = "6.1"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
@@ -20,6 +20,7 @@ class LogFunc(ABC):
         self.__Outputs = [False] * numOutputs
         self.__Name = type(self).__name__
         self.__ShowBehavior = DefaultShow()
+        self._Symbol = ""
         self.execute()
 
     # getter and setter
@@ -51,7 +52,7 @@ class LogFunc(ABC):
 
     def __str__(self):
         self.execute()
-        self.__ShowBehavior.show(self.Name, self.Inputs, self.Outputs)
+        self.__ShowBehavior.show(self)
 
     @abstractmethod
     def execute(self):
@@ -67,6 +68,7 @@ class AndGate(LogFunc):
     def __init__(self, numInputs=2):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
+        self._Symbol = "&"
 
     def execute(self):
         """Set the outputs to true when all inputs are true."""
@@ -80,6 +82,7 @@ class OrGate(LogFunc):
     def __init__(self, numInputs=2):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
+        self._Symbol = "≥1"
 
     def execute(self):
         """Set the outputs to false when all inputs are false."""
@@ -93,9 +96,10 @@ class XorGate(LogFunc):
     def __init__(self, numInputs=2):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
+        self._Symbol = "=1"
 
     def execute(self):
-        """Set the outputs to true when exactly one input is true."""
+        """Set the outputs to true when the number of true inputs is even."""
         if self.Inputs.count(True) % 2 == 1:
             self._setOutputs(True)
         else:
@@ -106,6 +110,7 @@ class NandGate(LogFunc):
     def __init__(self, numInputs=2):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
+        self._Symbol = "!&"
 
     def execute(self):
         """Set the outputs to false when all inputs are true."""
@@ -119,10 +124,11 @@ class NotGate(LogFunc):
     def __init__(self, numInputs=2):
         """Set the number of inputs and outputs (default: 2)."""
         super().__init__(numInputs, numInputs)
+        self._Symbol = "!1"
 
     def execute(self):
         """Set the output at the specific index to the opposite of the input at that position."""
-        outputs = [None] * len(self.Outputs)
+        outputs = [False] * len(self.Outputs)
         for i in range(len(self.Inputs)):
             outputs[i] = not self.Inputs[i]
         self._setOutputs(outputs)
@@ -134,6 +140,7 @@ class HalfAdder(LogFunc):
         self.__sum = XorGate(2)
         self.__carry = AndGate(2)
         super().__init__(2, 2)
+        self.setShow(HalfAdderShow())
 
     def execute(self):
         """Set the outputs to carry and sum of the half adder."""
@@ -150,6 +157,7 @@ class FullAdder(LogFunc):
         self.__sum = [HalfAdder(), HalfAdder()]
         self.__carry = OrGate()
         super().__init__(3, 2)
+        self.setShow(FullAdderShow())
 
     def execute(self):
         """Set the outputs to carry and sum of the full adder."""
@@ -171,6 +179,7 @@ class EightBitAdder(LogFunc):
         """
         self.__adder = [FullAdder()] * 8
         super().__init__(16, 9)
+        self.setShow(EightBitShow())
 
     def execute(self):
         """Add two 8-bit numbers and get a 9-bit sum"""
@@ -187,9 +196,8 @@ class EightBitAdder(LogFunc):
 
 
 class ShowBehavior(ABC):
-
     @abstractmethod
-    def show(self, name, inputs, outputs):
+    def show(self, logFunc):
         raise NotImplementedError()
 
     def _boolToBinary(self, bool_values):
@@ -207,34 +215,59 @@ class ShowBehavior(ABC):
 
 
 class DefaultShow(ShowBehavior):
-
-    def show(self, name, inputs, outputs):
+    def show(self, logFunc):
         ausgangsstring = "einem Ausgang"
-        if not isinstance(outputs, bool):
-            ausgangsstring = str(len(outputs)) + " Ausgängen"
-        print("Die Eingänge " + str(inputs) + " ergeben im " \
-               + name + " mit " + ausgangsstring + " folgende Werte: " + str(outputs))
+        if not isinstance(logFunc.Outputs, bool):
+            ausgangsstring = str(len(logFunc.Outputs)) + " Ausgängen"
+        print("Die Eingänge " + str(logFunc.Inputs) + " ergeben im " \
+               + logFunc.Name + " mit " + ausgangsstring + " folgende Werte: " + str(logFunc.Outputs))
+
 
 class StarGateShow():
-
     def __init__(self):
-        self._cwidth = 60
+        self._cwidth = 54
 
     def _get_line(self, left_text, right_text):
         return "**" + left_text.ljust(int(self._cwidth / 3 - 2), " ") + "|" + right_text.ljust(
             int((2 * self._cwidth) / 3) - 3, " ") + "**"
 
-class HalfAdderShow(ShowBehavior, StarGateShow):
 
-    def show(self, name, inputs, outputs):
-        inputs = self._boolToBinary(inputs)
-        outputs = self._boolToBinary(outputs)
-
+class GatterShow(ShowBehavior, StarGateShow):
+    def show(self, logFunc):
+        inputs = self._boolToBinary(logFunc.Inputs)
+        len_inputs = len(inputs)
+        outputs = self._boolToBinary(logFunc.Outputs)
         empty_line = self._get_line("", "")
         first_last = "".ljust(self._cwidth, "*")
         mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+
         print("\n" + first_last)
-        print(self._get_line(" " + name, ""))
+        print(self._get_line(" " + logFunc.Name, ""))
+        print(self._get_line("", "  Input0 = " + inputs[0]))
+        for i in range(1,len_inputs-1):
+            print(self._get_line(" " * (int(self._cwidth / 3) - 5), "  Input" + str(i) + " = " + inputs[i]))
+        print(self._get_line(" " * (int(self._cwidth / 3) - 5) + logFunc._Symbol, "  Input" + str(len_inputs-1) + " = " + inputs[len_inputs-1]))
+        print(mid)
+        print(empty_line)
+        if len(outputs) == 1:
+            print(self._get_line("", "  Output = " + outputs[0]))
+        else:
+            for i in range(len(outputs)):
+                print(self._get_line("", "  Output" + str(i) + " = " + outputs[i]))
+        print(empty_line)
+        print(first_last + "\n")
+
+
+class HalfAdderShow(ShowBehavior, StarGateShow):
+    def show(self, logFunc):
+        inputs = self._boolToBinary(logFunc.Inputs)
+        outputs = self._boolToBinary(logFunc.Outputs)
+        empty_line = self._get_line("", "")
+        first_last = "".ljust(self._cwidth, "*")
+        mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+
+        print("\n" + first_last)
+        print(self._get_line(" " + logFunc.Name, ""))
         print(self._get_line("", "  A = " + inputs[0]))
         print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B = " + inputs[1]))
         print(mid)
@@ -245,16 +278,15 @@ class HalfAdderShow(ShowBehavior, StarGateShow):
 
 
 class FullAdderShow(ShowBehavior, StarGateShow):
-
-    def show(self, name, inputs, outputs):
-        inputs = self._boolToBinary(inputs)
-        outputs = self._boolToBinary(outputs)
-
+    def show(self, logFunc):
+        inputs = self._boolToBinary(logFunc.Inputs)
+        outputs = self._boolToBinary(logFunc.Outputs)
         empty_line = self._get_line("", "")
         first_last = "".ljust(self._cwidth, "*")
         mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+
         print("\n" + first_last)
-        print(self._get_line(" " + name, ""))
+        print(self._get_line(" " + logFunc.Name, ""))
         print(self._get_line("", "  Carry in = " + inputs[0]))
         print(self._get_line("", "  A        = " + inputs[1]))
         print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B        = " + inputs[2]))
@@ -266,11 +298,9 @@ class FullAdderShow(ShowBehavior, StarGateShow):
 
 
 class EightBitShow(ShowBehavior, StarGateShow):
-
-    def show(self, name, inputs, outputs):
-        inputs = self._boolToBinary(inputs)
-        outputs = self._boolToBinary(outputs)
-
+    def show(self, logFunc):
+        inputs = self._boolToBinary(logFunc.Inputs)
+        outputs = self._boolToBinary(logFunc.Outputs)
         inputsA = ""
         for i in range(8):
             inputsA += str(inputs[i])
@@ -279,17 +309,16 @@ class EightBitShow(ShowBehavior, StarGateShow):
         for i in range(8, 16):
             inputsB += str(inputs[i])
         inputsB = inputsB[::-1]
-
         sum_line = ""
         for i in range(8):
             sum_line += str(outputs[i])
         sum_line = sum_line[::-1]
-
         empty_line = self._get_line("", "")
         first_last = "".ljust(self._cwidth, "*")
         mid = self._get_line("_" * (int(self._cwidth / 3) - 2), "_" * (int(2 * self._cwidth / 3) - 3))
+
         print("\n" + first_last)
-        print(self._get_line(" " + name, ""))
+        print(self._get_line(" " + logFunc.Name, ""))
         print(self._get_line("", "  A = " + inputsA))
         print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B = " + inputsB))
         print(mid)
