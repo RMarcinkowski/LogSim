@@ -324,8 +324,8 @@ class EightBitShow(ShowBehavior, StarGateShow):
 
         print("\n" + first_last)
         print(self._get_line(" " + logFunc.Name, ""))
-        print(self._get_line("", "  A = " + inputsA))
-        print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B = " + inputsB))
+        print(self._get_line("", "  A =   " + inputsA))
+        print(self._get_line(" " * (int(self._cwidth / 3) - 5) + "+", "  B =   " + inputsB))
         print(mid)
         print(empty_line)
         print(self._get_line("  Carry = " + outputs[8], "  Sum = " + sum_line))
