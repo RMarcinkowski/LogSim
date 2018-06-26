@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-__version__ = "6.1"  # Verwaltungsinfos
+__version__ = "6.2"  # Verwaltungsinfos
 __author__ = "Ruben Marcinkowski"
 
 
@@ -69,6 +69,7 @@ class AndGate(LogFunc):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
         self._Symbol = "&"
+        self.setShow(GatterShow())
 
     def execute(self):
         """Set the outputs to true when all inputs are true."""
@@ -83,6 +84,7 @@ class OrGate(LogFunc):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
         self._Symbol = "≥1"
+        self.setShow(GatterShow())
 
     def execute(self):
         """Set the outputs to false when all inputs are false."""
@@ -97,6 +99,7 @@ class XorGate(LogFunc):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
         self._Symbol = "=1"
+        self.setShow(GatterShow())
 
     def execute(self):
         """Set the outputs to true when the number of true inputs is even."""
@@ -111,6 +114,7 @@ class NandGate(LogFunc):
         """Set the number of inputs (default: 2) and one output."""
         super().__init__(numInputs, 1)
         self._Symbol = "!&"
+        self.setShow(GatterShow())
 
     def execute(self):
         """Set the outputs to false when all inputs are true."""
@@ -125,6 +129,7 @@ class NotGate(LogFunc):
         """Set the number of inputs and outputs (default: 2)."""
         super().__init__(numInputs, numInputs)
         self._Symbol = "!1"
+        self.setShow(GatterShow())
 
     def execute(self):
         """Set the output at the specific index to the opposite of the input at that position."""
